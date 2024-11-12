@@ -18,7 +18,8 @@
 <div class="container">
   <div class="row row-cols-1 row-cols-md-3 g-4">
 
-    <div class="col" th:each="category : ${categories}">
+    <!-- Mostrar categorías si no es una búsqueda -->
+    <div class="col" th:if="${!isSearch}" th:each="category : ${categories}">
       <div class="card h-100">
         <img th:src="${category.strCategoryThumb}" class="card-img-top" th:alt="${category.strCategory}">
         <div class="card-body">
@@ -28,6 +29,18 @@
       </div>
     </div>
 
+    <!-- Mostrar resultados de búsqueda si es una búsqueda -->
+    <div class="col" th:if="${isSearch}" th:each="meal : ${meals}">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${meal.strMeal}">Meal Name</h5>
+          <a th:href="@{/TeleDrink/meal/detail(id=${meal.idMeal})}">
+            <img th:src="${meal.strMealThumb}" class="card-img-top" th:alt="${meal.strMeal}">
+          </a>
+          <p class="card-text" th:text="${meal.strCategory}">Category</p>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

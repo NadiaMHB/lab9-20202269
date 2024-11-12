@@ -1,14 +1,18 @@
 package org.example.lab9gtics.controller;
 
 import org.example.lab9gtics.Dao.CategoryDao;
-
+import org.example.lab9gtics.Entity.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 
 @Controller
 @RequestMapping("/TeleDrink")
@@ -28,5 +32,23 @@ public class TeleController {
         model.addAttribute("isSearch", false);
         return "categories/list";
     }
+
+    @GetMapping("/search")
+    public String buscarComida(@RequestParam("value") String value, Model model) {
+        List<Meal> meals = categoryDao.buscarComidaPorNombre(value);
+        model.addAttribute("meals", meals);
+        model.addAttribute("isSearch", true);
+        return "categories/list";
+    }
+
+    @GetMapping("/meal/detail")
+    public String mostrarDetalleComida(@RequestParam("id") String idMeal, Model model) {
+        Meal meal = categoryDao.obtenerDetalleComida(idMeal);
+
+        model.addAttribute("meal", meal);
+        return "meal/details";
+    }
+
+
 
 }
