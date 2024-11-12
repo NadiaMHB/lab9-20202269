@@ -2,7 +2,11 @@ package org.example.lab9gtics.controller;
 
 import org.example.lab9gtics.Dao.CategoryDao;
 import org.example.lab9gtics.Entity.Meal;
+import org.example.lab9gtics.Entity.FavoriteMeal;
+import org.example.lab9gtics.Entity.Meal;
+import org.example.lab9gtics.Repository.FavoriteMealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,6 +67,16 @@ public class TeleController {
         // Si no está en favoritos, lo añadimos con todos los detalles
         categoryDao.guardarEnFavoritos(idMeal);
         return ResponseEntity.ok("Added to favorites");
+    }
+
+
+    @Autowired
+    private FavoriteMealRepository favoriteMealRepository;
+    @GetMapping("/favorites")
+    public String mostrarFavoritos(Model model) {
+        List<FavoriteMeal> favoriteMeals = favoriteMealRepository.findAll();
+        model.addAttribute("favoriteMeals", favoriteMeals);
+        return "meal/favorites";
     }
 
 }
