@@ -45,10 +45,24 @@ public class TeleController {
     public String mostrarDetalleComida(@RequestParam("id") String idMeal, Model model) {
         Meal meal = categoryDao.obtenerDetalleComida(idMeal);
 
+        // Verificar si el idMeal ya está en favoritos
+        boolean isInFavorites = categoryDao.estaEnFavoritos(idMeal);
+
         model.addAttribute("meal", meal);
+        model.addAttribute("inFavorites", isInFavorites);
         return "meal/details";
     }
 
+    @PostMapping("/favorite/add")
+    public ResponseEntity<?> agregarAFavoritos(@RequestParam("id") String idMeal) {
+        // Verificar si el idMeal ya está en favoritos
+        if (categoryDao.estaEnFavoritos(idMeal)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Already in favorites");
+        }
 
+        // Si no está en favoritos, lo añadimos con todos los detalles
+        categoryDao.guardarEnFavoritos(idMeal);
+        return ResponseEntity.ok("Added to favorites");
+    }
 
 }

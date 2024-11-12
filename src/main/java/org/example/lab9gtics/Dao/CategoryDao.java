@@ -1,7 +1,9 @@
 package org.example.lab9gtics.Dao;
 
 import org.example.lab9gtics.Entity.Category;
+import org.example.lab9gtics.Entity.FavoriteMeal;
 import org.example.lab9gtics.Entity.Meal;
+import org.example.lab9gtics.Repository.FavoriteMealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -97,5 +99,25 @@ public class CategoryDao {
         return null;
     }
 
+    @Autowired
+    private FavoriteMealRepository favoriteMealRepository;
+
+    public void guardarEnFavoritos(String idMeal) {
+        // Obtener los detalles completos de la comida
+        Meal meal = obtenerDetalleComida(idMeal);
+        if (meal != null) {
+            FavoriteMeal favoriteMeal = new FavoriteMeal();
+            favoriteMeal.setIdMeal(meal.getIdMeal());
+            favoriteMeal.setStrMeal(meal.getStrMeal());
+            favoriteMeal.setStrCategory(meal.getStrCategory());
+            favoriteMeal.setStrMealThumb(meal.getStrMealThumb());
+
+            // Guardar en la base de datos con todos los detalles
+            favoriteMealRepository.save(favoriteMeal);
+        }
+    }
+    public boolean estaEnFavoritos(String idMeal) {
+        return favoriteMealRepository.existsByIdMeal(idMeal);
+    }
 
 }
